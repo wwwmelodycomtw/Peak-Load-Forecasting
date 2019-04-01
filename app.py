@@ -67,16 +67,17 @@ train2018.head()
 #train2018.dtypes
 
 
-# In[185]:
+# In[328]:
 
 
 #查看特定變數欄
 train_y = train2018.iloc[:,2]
 #train_y.head(3)
 #train2018 = train2018.drop(2, axis = 1)
+train_y = train_y.astype("float64")
 
 
-# In[186]:
+# In[329]:
 
 
 plt.plot(train_y)
@@ -220,12 +221,6 @@ train_norm = train_norm.drop(0,axis=1)
 #train_norm.columns = [["y"]]
 
 
-# In[309]:
-
-
-train_norm
-
-
 # In[310]:
 
 
@@ -281,6 +276,8 @@ plt.show()
 X_train.shape
 
 
+# ## Prediction
+
 # In[316]:
 
 
@@ -315,9 +312,12 @@ predict
 guessdate = np.array([20190402, 20190403, 20190404, 20190405, 20190406, 20190407, 20190408])
 
 
+# # Output .csv file
+
 # In[325]:
 
 
 guess = {"date":guessdate, "peak_load(MW)":predict}
 df_guess=pd.DataFrame(guess)
 df_guess.to_csv("submission.csv", header=False, index=False)
+
