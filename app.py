@@ -288,7 +288,8 @@ X_train.shape
 # In[169]:
 
 
-predict = model.predict(np.array(train_norm[len(train_norm)-20:]).reshape((1,20,2)))
+X_predict = np.array(train_norm[len(train_norm)-20:]).reshape((1,20,2))
+predict = model.predict(X_predict)
 print(predict.reshape)
 
 
