@@ -3,7 +3,7 @@
 
 # # Install Package
 
-# In[390]:
+# In[1]:
 
 
 #coding=utf-8
@@ -22,7 +22,7 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 
 # # Read File
 
-# In[391]:
+# In[38]:
 
 
 train2018 = pd.read_csv('台灣電力公司_過去電力供需資訊2018.csv', engine='python',header = None)
@@ -30,7 +30,7 @@ train2018 = train2018.drop(train2018.index[0])
 train2018.head(3)
 
 
-# In[392]:
+# In[39]:
 
 
 train2019 = pd.read_csv('台灣電力公司_過去電力供需資訊2019.csv', engine='python',header = None)
@@ -39,7 +39,7 @@ train2019.columns = ["date","y"]
 train2019.head(3)
 
 
-# In[393]:
+# In[40]:
 
 
 train2018.head()
@@ -47,13 +47,13 @@ train2018.head()
 
 # # Data Preprocessing
 
-# In[394]:
+# In[41]:
 
 
 #train2018.describe(include="all")
 
 
-# In[395]:
+# In[42]:
 
 
 #train2018[["日期"]] = train2018["日期"].astype("float")
@@ -61,23 +61,23 @@ train2018.head()
 #train2019["date"] = pd.to_datetime(train2019["date"], format='%Y%m%d')
 
 
-# In[396]:
+# In[43]:
 
 
 #train2018.dtypes
 
 
-# In[397]:
+# In[44]:
 
 
 #查看特定變數欄
-train_y = train2018.iloc[:,2]
+train_y = train2018.iloc[:,1]
 #train_y.head(3)
 #train2018 = train2018.drop(2, axis = 1)
 train_y = train_y.astype("float64")
 
 
-# In[398]:
+# In[45]:
 
 
 plt.plot(train_y)
@@ -86,13 +86,14 @@ plt.show()
 
 # # Feature Selection
 
-# In[399]:
+# In[46]:
 
 
-train2018 = train2018.loc[:,0:2]
+train2018 = train2018.loc[:,[0,2]]
+train2018.head()
 
 
-# In[400]:
+# In[47]:
 
 
 #train2018["year"] = train2018.loc[:,0].dt.year
@@ -101,26 +102,26 @@ train2018 = train2018.loc[:,0:2]
 #train2018["day"] = train2018.loc[:,0].dt.dayofweek
 
 
-# In[401]:
+# In[48]:
 
 
 #train2018 = train2018.drop(0, axis=1)
 #train2018 = train2018.drop(1, axis=1)
 
 
-# In[402]:
+# In[49]:
 
 
-#train2018.columns = ["y", "year", "month", "date", "day"]
+train2018.columns = ["date", "y"]
 
 
-# In[403]:
+# In[50]:
 
 
 #train2018.head()
 
 
-# In[404]:
+# In[51]:
 
 
 #train2019["year"] = train2019.loc[:,0].dt.year
@@ -129,31 +130,37 @@ train2018 = train2018.loc[:,0:2]
 #train2019["day"] = train2019.loc[:,0].dt.dayofweek
 
 
-# In[405]:
+# In[52]:
 
 
 #train2019 = train2019.drop(["date"], axis=1)
 
 
-# In[406]:
+# In[53]:
 
 
 #train2019.columns = ["y", "year", "month", "date", "day"]
 
 
-# In[407]:
+# In[54]:
 
 
 train2019.head()
 
 
-# In[408]:
+# In[55]:
 
 
-#traindata = pd.concat([train2018, train2019], axis = 0)
+#train2019 = pd.concat([train2018, train2019], axis = 0)
 
 
-# In[409]:
+# In[56]:
+
+
+train2019.head()
+
+
+# In[57]:
 
 
 #def normalize(df):
@@ -161,14 +168,14 @@ train2019.head()
 #    return norm
 
 
-# In[410]:
+# In[58]:
 
 
 #traindata.iloc[:,1] = 
 #traindata.iloc[:,1:] = normalize(traindata.iloc[:,1:])
 
 
-# In[411]:
+# In[59]:
 
 
 #traindata.head()
@@ -178,7 +185,7 @@ train2019.head()
 
 # ## Model
 
-# In[412]:
+# In[60]:
 
 
 def buildTrain(train, pastDay=20, futureDay=8):
@@ -189,7 +196,7 @@ def buildTrain(train, pastDay=20, futureDay=8):
     return np.array(X_train), np.array(Y_train)
 
 
-# In[413]:
+# In[61]:
 
 
 def shuffle(X,Y):
@@ -199,7 +206,7 @@ def shuffle(X,Y):
     return X[randomList], Y[randomList]
 
 
-# In[414]:
+# In[62]:
 
 
 def splitData(X,Y,rate):
@@ -210,7 +217,7 @@ def splitData(X,Y,rate):
     return X_train, Y_train, X_val, Y_val
 
 
-# In[415]:
+# In[63]:
 
 
 scaler = MinMaxScaler(feature_range=(0, 1))
@@ -221,7 +228,7 @@ train_norm = train_norm.drop(0,axis=1)
 #train_norm.columns = [["y"]]
 
 
-# In[416]:
+# In[64]:
 
 
 # build Data, use last 20 days to predict next 8 days
@@ -230,14 +237,14 @@ X_train, Y_train = buildTrain(train_norm, 20, 8)
 X_train, Y_train = shuffle(X_train, Y_train)
 
 
-# In[417]:
+# In[65]:
 
 
 print(X_train.shape)
 print(Y_train.shape)
 
 
-# In[418]:
+# In[66]:
 
 
 def buildManyToManyModel(shape):
@@ -253,7 +260,7 @@ def buildManyToManyModel(shape):
     return model
 
 
-# In[419]:
+# In[67]:
 
 
 model = buildManyToManyModel(X_train.shape)
@@ -262,7 +269,7 @@ callback = EarlyStopping(monitor="mean_absolute_error", patience=10, verbose=1, 
 history = model.fit(X_train, Y_train, epochs=1000, batch_size=5, validation_split=0.1, callbacks=[callback],shuffle=True)
 
 
-# In[420]:
+# In[68]:
 
 
 plt.plot(history.history['loss'])
@@ -270,7 +277,7 @@ plt.plot(history.history['val_loss'])
 plt.show()
 
 
-# In[421]:
+# In[69]:
 
 
 X_train.shape
@@ -278,41 +285,41 @@ X_train.shape
 
 # ## Prediction
 
-# In[422]:
+# In[70]:
 
 
 predict = model.predict(np.array(train_norm[len(train_norm)-20:]).reshape((1,20,2)))
 print(predict.reshape)
 
 
-# In[423]:
+# In[71]:
 
 
 print(scaler.data_max_)
 print(scaler.data_min_)
 
 
-# In[424]:
+# In[72]:
 
 
 predict = predict * (scaler.data_max_[1]-scaler.data_min_[1]) + scaler.data_min_[1]
 # = scaler.inverse_transform(predict)
 
 
-# In[425]:
+# In[73]:
 
 
 predict = predict.reshape((8))
 predict
 
 
-# In[426]:
+# In[74]:
 
 
 predict = predict[1:8]
 
 
-# In[427]:
+# In[75]:
 
 
 guessdate = np.array([20190402, 20190403, 20190404, 20190405, 20190406, 20190407, 20190408])
@@ -320,7 +327,7 @@ guessdate = np.array([20190402, 20190403, 20190404, 20190405, 20190406, 20190407
 
 # # Output .csv file
 
-# In[428]:
+# In[76]:
 
 
 guess = {"date":guessdate, "peak_load(MW)":predict}
