@@ -321,10 +321,3 @@ guessdate = np.array([20190402, 20190403, 20190404, 20190405, 20190406, 20190407
 guess = {"date":guessdate, "peak_load(MW)":predict}
 df_guess=pd.DataFrame(guess)
 df_guess.to_csv("submission.csv", header=False, index=False)
-
-
-# In[ ]:
-
-
-
-
